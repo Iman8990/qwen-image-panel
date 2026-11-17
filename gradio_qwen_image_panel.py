@@ -1,9 +1,8 @@
 """Qwen-Image — Gradio panel on Modal (teaching build).
 
-Standalone app 'qwen-image-panel', separate from the Ideogram apps.
-Reuses the 'ideogram4-model-auth' secret (HF_TOKEN) and the
-'ideogram4-panel-auth' secret (panel login) read-only; weights live on
-their own volume 'qwen-image-weights'. Nothing Ideogram is modified.
+Standalone app 'qwen-image-panel'. Uses its own secrets
+'qwen-image-auth' (HF_TOKEN) and 'qwen-image-panel-auth' (panel login);
+weights live on their own volume 'qwen-image-weights'.
 
 Two models, one class each (a GPU boots only for the tab in use):
   TextServer - Qwen/Qwen-Image-2512       (QwenImagePipeline)
@@ -31,8 +30,8 @@ DEFAULT_NEGATIVE = "低分辨率，低画质，肢体畸形，手指畸形，画
 app = modal.App("qwen-image-panel")
 
 vol = modal.Volume.from_name("qwen-image-weights", create_if_missing=True)
-secrets = [modal.Secret.from_name("ideogram4-model-auth")]
-panel_secrets = secrets + [modal.Secret.from_name("ideogram4-panel-auth")]
+secrets = [modal.Secret.from_name("qwen-image-auth")]
+panel_secrets = secrets + [modal.Secret.from_name("qwen-image-panel-auth")]
 
 image = (
     modal.Image.from_registry("nvidia/cuda:12.1.1-devel-ubuntu22.04", add_python="3.11")
